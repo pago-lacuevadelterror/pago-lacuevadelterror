@@ -250,7 +250,7 @@ export default function CreditoPage() {
             <div className="flex justify-end gap-3 pt-6 border-t border-[#eee] mt-4">
               <button
                 type="button"
-                onClick={() => router.push("/pago")}
+                onClick={() => router.push("/")}
                 className="px-5 h-[40px] rounded-md bg-[#e4e7ee] text-[#0b57d0] text-[14px] font-medium hover:bg-[#dce1eb]"
               >
                 Volver

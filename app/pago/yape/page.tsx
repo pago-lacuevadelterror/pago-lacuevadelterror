@@ -93,7 +93,7 @@ export default function YapePage() {
 
               <button
                 type="button"
-                onClick={() => router.push("/pago")}
+                onClick={() => router.push("/")}
                 className="text-[14px] text-[#0b57d0] font-medium hover:underline"
               >
                 Modificar

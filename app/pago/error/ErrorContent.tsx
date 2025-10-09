@@ -65,7 +65,7 @@ export default function ErrorContent() {
           <p className="text-[14px] text-[#444] mb-6">Usa un medio de pago distinto.</p>
 
           <button
-            onClick={() => router.push("/pago")}
+            onClick={() => router.push("/")}
             className="bg-[#009ee3] hover:bg-[#008dd0] text-white font-medium text-[14px] rounded-md px-6 py-3 transition"
           >
             Pagar con otro medio
