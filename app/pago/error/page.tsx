@@ -5,8 +5,6 @@ export const dynamic = "force-dynamic";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export const dynamic = "force-dynamic";
-
 export default function ErrorPagoPage() {
   const router = useRouter();
   const params = useSearchParams();
