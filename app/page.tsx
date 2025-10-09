@@ -1,103 +1,111 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
+import { useRouter } from "next/navigation"; // ✅ Import necesario para redirecciones
 
-export default function Home() {
+export default function PagoPage() {
+  const [monto] = useState<number>(150);
+  const router = useRouter(); // ✅ Instancia del enrutador
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main className="min-h-screen bg-[#f3f3f3] font-[system-ui,Segoe UI,Roboto,sans-serif] text-[#111]">
+      {/* CONTENEDOR GENERAL */}
+      <div className="max-w-6xl mx-auto py-10 px-6 flex flex-col md:grid md:grid-cols-[1fr_380px] md:gap-10">
+        
+        {/* PANEL DERECHO (debe ir arriba en móvil) */}
+        <aside className="order-1 md:order-2 mb-6 md:mb-0">
+          <div className="flex items-center justify-between md:justify-start md:gap-3 mb-3">
+            <div className="flex items-center gap-3">
+              <Image
+                src="/logo-lacueva.png"
+                alt="La cueva del terror"
+                width={36}
+                height={36}
+                className="rounded-full border border-[#ddd]"
+              />
+              <span className="text-[15px] font-medium">La cueva del terror</span>
+            </div>
+          </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          <div className="bg-white rounded-md border border-[#ddd] p-5 shadow-sm">
+            {/* Mobile: solo “Link de pago” */}
+            <div className="flex items-center justify-between md:hidden">
+              <p className="text-[14px] text-[#555]">Link de pago</p>
+              <p className="text-[14px] font-medium text-[#111]">S/. {monto}</p>
+            </div>
+
+            {/* Desktop: Detalles del pago completo */}
+            <div className="hidden md:block">
+              <p className="text-[15px] font-semibold mb-4">Detalles del pago</p>
+              <div className="flex items-center justify-between">
+                <p className="text-[14px] text-[#555]">Link de pago</p>
+                <p className="text-[14px] font-medium text-[#111]">S/. {monto}</p>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        {/* PANEL IZQUIERDO */}
+        <section className="order-2 md:order-1 space-y-6">
+          <h2 className="text-[20px] font-semibold">¿Cómo quieres pagar?</h2>
+
+          {/* Con cuenta de Mercado Pago */}
+          <div className="space-y-3">
+            <p className="text-[14px] font-medium">Con tu cuenta de Mercado Pago</p>
+            <button className="w-full flex items-center justify-between bg-white rounded-md px-4 py-4 border border-[#ddd] hover:bg-[#f9f9f9] transition">
+              <span className="flex items-center gap-3">
+                <Image
+                  src="/logo-mercadopago.jpeg"
+                  alt="Mercado Pago"
+                  width={28}
+                  height={28}
+                  className="rounded-md"
+                />
+                <span className="text-[15px] text-[#111]">Ingresar con mi cuenta</span>
+              </span>
+              <span className="text-[#999] text-[20px]">›</span>
+            </button>
+          </div>
+
+          {/* Sin cuenta de Mercado Pago */}
+          <div className="space-y-3">
+            <p className="text-[14px] font-medium">Sin cuenta de Mercado Pago</p>
+
+            <div className="bg-white rounded-md border border-[#ddd] overflow-hidden">
+              {[
+                { icon: "/credit-card-front-svgrepo-com.svg", label: "Tarjeta de crédito", path: "/pago/credito" },
+                { icon: "/credit-card-front-svgrepo-com.svg", label: "Tarjeta de débito", path: "/pago/debito" },
+                { icon: "/yape-loguito.png", label: "Yape", path: "/pago/yape" },
+              ].map((m, i, arr) => (
+                <button
+                  key={m.label}
+                  onClick={() => router.push(m.path)} // ✅ Redirección según método
+                  className={`w-full flex items-center justify-between px-4 py-3 text-left hover:bg-[#f9f9f9] transition ${
+                    i < arr.length - 1 ? "border-b border-[#eee]" : ""
+                  }`}
+                >
+                  <span className="flex items-center gap-3">
+                    <Image
+                      src={m.icon}
+                      alt={m.label}
+                      width={28}
+                      height={28}
+                      className="rounded-sm"
+                    />
+                    <span className="text-[15px] text-[#111]">{m.label}</span>
+                  </span>
+                  <span className="text-[#999] text-[20px]">›</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <footer className="text-center text-[13px] text-[#888] pt-8">
+            Procesado por Mercado Pago.
+          </footer>
+        </section>
+      </div>
+    </main>
   );
 }
