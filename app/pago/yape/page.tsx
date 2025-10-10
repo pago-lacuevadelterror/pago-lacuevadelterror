@@ -8,7 +8,7 @@ import RightPanel from "@/components/RightPanel";
 
 export default function YapePage() {
   const router = useRouter();
-  const [monto] = useState<number>(120);
+  const [monto] = useState<number>(112);
   const [email, setEmail] = useState("");
   const [celular, setCelular] = useState("");
   const [codigo, setCodigo] = useState("");
