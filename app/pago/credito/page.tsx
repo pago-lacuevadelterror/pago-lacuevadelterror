@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import RightPanel from "@/components/RightPanel";
 
 export default function CreditoPage() {
-  const [monto] = useState<number>(150);
+  const [monto] = useState<number>(330);
   const router = useRouter();
   const [form, setForm] = useState({
     tarjeta: "",
