@@ -2,11 +2,16 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // ✅ Import necesario para redirecciones
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function PagoPage() {
-  const [monto] = useState<number>(150);
-  const router = useRouter(); // ✅ Instancia del enrutador
+  const params = useSearchParams();
+  const router = useRouter();
+
+  // ✅ Leer el monto desde la URL (?monto=89.9)
+  const montoParam = params.get("monto");
+  const monto = montoParam ? parseFloat(montoParam) : 150; // 150 es el valor por defecto
+
 
   return (
     <main className="min-h-screen bg-[#f3f3f3] font-[system-ui,Segoe UI,Roboto,sans-serif] text-[#111]">
