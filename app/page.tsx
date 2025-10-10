@@ -9,7 +9,7 @@ function PagoContent() {
   const router = useRouter();
 
   const montoParam = params.get("monto");
-  const monto = montoParam ? parseFloat(montoParam) : 150;
+  const monto = montoParam ? parseFloat(montoParam) : 120;
 
   return (
     <main className="min-h-screen bg-[#f3f3f3] font-[system-ui,Segoe UI,Roboto,sans-serif] text-[#111]">
