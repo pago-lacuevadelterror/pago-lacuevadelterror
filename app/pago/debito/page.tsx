@@ -2,13 +2,15 @@
 
 export const dynamic = "force-dynamic";
 
-import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useRef, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import RightPanel from "@/components/RightPanel";
 
-export default function DebitoPage() {
-  const [monto] = useState<number>(150);
+function DebitoContent() {
   const router = useRouter();
+  const params = useSearchParams();
+  const monto = parseFloat(params.get("monto") || "150"); // ✅ monto dinámico desde la URL
+
   const [form, setForm] = useState({
     tarjeta: "",
     titular: "",
@@ -21,6 +23,7 @@ export default function DebitoPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  // --- Dropdown personalizado del documento ---
   const docOptions = ["DNI", "C.E", "RUC", "Otro"];
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -34,6 +37,7 @@ export default function DebitoPage() {
     return () => document.removeEventListener("click", handler);
   }, []);
 
+  // --- Redirección con datos ---
   const handleNext = () => {
     if (
       !form.tarjeta ||
@@ -80,14 +84,12 @@ export default function DebitoPage() {
               <path d="M11 17h2v-6h-2v6zm0-8h2V7h-2v2z" fill="white" />
             </svg>
             <p className="text-[14px] text-[#111] leading-snug">
-              Activa compras por internet en la app de tu banco o llamando al
-              teléfono que está en la tarjeta.
+              Activa compras por internet en la app de tu banco o llamando al teléfono que está en la tarjeta.
             </p>
           </div>
 
           {/* FORMULARIO */}
           <form onSubmit={(e) => e.preventDefault()} className="space-y-5">
-
             {/* 🔹 NÚMERO DE TARJETA */}
             <div className="relative">
               <label className="block text-[14px] font-medium text-[#111] mb-1">
@@ -276,7 +278,7 @@ export default function DebitoPage() {
             <div className="flex justify-end gap-3 pt-6 border-t border-[#eee] mt-4">
               <button
                 type="button"
-                onClick={() => router.push("/")}
+                onClick={() => router.push(`/pago?monto=${monto}`)} // ✅ conserva el monto
                 className="px-5 h-[40px] rounded-md bg-[#e4e7ee] text-[#0b57d0] text-[14px] font-medium hover:bg-[#dce1eb]"
               >
                 Volver
@@ -296,5 +298,13 @@ export default function DebitoPage() {
         <RightPanel monto={monto} />
       </div>
     </main>
+  );
+}
+
+export default function DebitoPage() {
+  return (
+    <Suspense fallback={<div className="p-10 text-center">Cargando...</div>}>
+      <DebitoContent />
+    </Suspense>
   );
 }
