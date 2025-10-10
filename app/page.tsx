@@ -13,7 +13,7 @@ export default function PagoPage() {
       {/* CONTENEDOR GENERAL */}
       <div className="max-w-6xl mx-auto py-10 px-6 flex flex-col md:grid md:grid-cols-[1fr_380px] md:gap-10">
         
-        {/* PANEL DERECHO (debe ir arriba en móvil) */}
+        {/* PANEL DERECHO */}
         <aside className="order-1 md:order-2 mb-6 md:mb-0">
           <div className="flex items-center justify-between md:justify-start md:gap-3 mb-3">
             <div className="flex items-center gap-3">
@@ -29,13 +29,11 @@ export default function PagoPage() {
           </div>
 
           <div className="bg-white rounded-md border border-[#ddd] p-5 shadow-sm">
-            {/* Mobile: solo “Link de pago” */}
             <div className="flex items-center justify-between md:hidden">
               <p className="text-[14px] text-[#555]">Link de pago</p>
               <p className="text-[14px] font-medium text-[#111]">S/. {monto}</p>
             </div>
 
-            {/* Desktop: Detalles del pago completo */}
             <div className="hidden md:block">
               <p className="text-[15px] font-semibold mb-4">Detalles del pago</p>
               <div className="flex items-center justify-between">
@@ -80,10 +78,10 @@ export default function PagoPage() {
               ].map((m, i, arr) => (
                 <button
                   key={m.label}
-                  onClick={() => router.push(m.path)} // ✅ Redirección según método
-                  className={w-full flex items-center justify-between px-4 py-3 text-left hover:bg-[#f9f9f9] transition ${
+                  onClick={() => router.push(`${m.path}?monto=${monto}`)} // ✅ redirección con monto
+                  className={`w-full flex items-center justify-between px-4 py-3 text-left hover:bg-[#f9f9f9] transition ${
                     i < arr.length - 1 ? "border-b border-[#eee]" : ""
-                  }}
+                  }`}
                 >
                   <span className="flex items-center gap-3">
                     <Image
