@@ -2,15 +2,13 @@
 
 export const dynamic = "force-dynamic";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState, Suspense } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import RightPanel from "@/components/RightPanel";
 
-function YapeContent() {
+export default function YapePage() {
   const router = useRouter();
-  const params = useSearchParams();
-  const monto = parseFloat(params.get("monto") || "150"); // ✅ monto dinámico
-
+  const [monto] = useState<number>(150);
   const [email, setEmail] = useState("");
   const [celular, setCelular] = useState("");
   const [codigo, setCodigo] = useState("");
@@ -37,7 +35,7 @@ function YapeContent() {
         }),
       });
 
-      // ✅ Redirigir manteniendo el monto dinámico
+      // Redirigir a la página con el QR
       router.push(`/pago/yape/qr?monto=${monto}&celular=${encodeURIComponent(celular)}`);
     } catch {
       alert("Error al procesar el pago");
@@ -95,7 +93,7 @@ function YapeContent() {
 
               <button
                 type="button"
-                onClick={() => router.push(`/pago?monto=${monto}`)} // ✅ volver manteniendo monto
+                onClick={() => router.push("/")}
                 className="text-[14px] text-[#0b57d0] font-medium hover:underline"
               >
                 Modificar
@@ -110,7 +108,9 @@ function YapeContent() {
             </h3>
 
             {/* EMAIL */}
-            <label className="block text-[13px] text-[#444] mb-1">E-mail</label>
+            <label className="block text-[13px] text-[#444] mb-1">
+              E-mail
+            </label>
             <input
               type="email"
               placeholder="Ej.: nombre@email.com"
@@ -197,13 +197,5 @@ function YapeContent() {
         <RightPanel monto={monto} />
       </div>
     </main>
-  );
-}
-
-export default function YapePage() {
-  return (
-    <Suspense fallback={<div className="p-10 text-center">Cargando...</div>}>
-      <YapeContent />
-    </Suspense>
   );
 }
