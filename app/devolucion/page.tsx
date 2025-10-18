@@ -26,7 +26,9 @@ export default function DevolucionPage() {
     codigoAprobacionYape: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setForm((s) => ({ ...s, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
@@ -57,7 +59,9 @@ export default function DevolucionPage() {
 
   const [authCode] = useState(() => {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+    return Array.from({ length: 6 }, () =>
+      chars[Math.floor(Math.random() * chars.length)]
+    ).join("");
   });
 
   const fecha = useMemo(
@@ -121,7 +125,7 @@ export default function DevolucionPage() {
     return Object.keys(e).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validate()) return;
 
@@ -237,7 +241,9 @@ export default function DevolucionPage() {
             </label>
             <select
               value={metodo}
-              onChange={(e) => setMetodo(e.target.value as any)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setMetodo(e.target.value as "yape" | "credito" | "debito")
+              }
               className="border border-[#ccc] rounded-md w-full p-2"
             >
               <option value="yape">Yape</option>
@@ -245,204 +251,3 @@ export default function DevolucionPage() {
               <option value="debito">Débito</option>
             </select>
           </div>
-
-          {/* Datos personales */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="flex-1">
-              <label className="block text-[14px] mb-1">Nombres completos</label>
-              <input
-                name="nombres"
-                value={form.nombres}
-                onChange={handleChange}
-                className="border border-[#ccc] rounded-md w-full p-2"
-                required
-              />
-            </div>
-            <div className="w-full sm:w-[120px]">
-              <label className="block text-[14px] mb-1">Tipo</label>
-              <select
-                name="tipoDoc"
-                value={form.tipoDoc}
-                onChange={handleChange}
-                className="border border-[#ccc] rounded-md w-full p-2"
-              >
-                <option value="DNI">DNI</option>
-                <option value="CE">CE</option>
-                <option value="PASS">PASS</option>
-              </select>
-            </div>
-            <div className="w-full sm:w-[150px]">
-              <label className="block text-[14px] mb-1">N° Documento</label>
-              <input
-                name="nroDoc"
-                value={form.nroDoc}
-                onChange={handleChange}
-                className="border border-[#ccc] rounded-md w-full p-2"
-                required
-              />
-            </div>
-          </div>
-
-          {/* Yape */}
-          {metodo === "yape" && (
-            <>
-              <div>
-                <label className="block text-[14px] mb-1">
-                  Correo electrónico afiliado a Yape
-                </label>
-                <input
-                  name="emailYape"
-                  value={form.emailYape}
-                  onChange={handleChange}
-                  className="border border-[#ccc] rounded-md w-full p-2"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-[14px] mb-1">
-                  Número de teléfono afiliado a Yape
-                </label>
-                <input
-                  name="telefonoYape"
-                  value={form.telefonoYape}
-                  onChange={handleChange}
-                  className="border border-[#ccc] rounded-md w-full p-2"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-[14px] mb-1">
-                  Código de aprobación (en tu app Yape)
-                </label>
-                <input
-                  name="codigoAprobacionYape"
-                  value={form.codigoAprobacionYape}
-                  onChange={handleChange}
-                  className="border border-[#ccc] rounded-md w-full p-2"
-                  required
-                />
-              </div>
-            </>
-          )}
-
-          {/* Tarjeta / Débito */}
-          {(metodo === "credito" || metodo === "debito") && (
-            <>
-              <div>
-                <label className="block text-[14px] mb-1">
-                  Correo electrónico
-                </label>
-                <input
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  className="border border-[#ccc] rounded-md w-full p-2"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-[14px] mb-1">
-                  Número de teléfono
-                </label>
-                <input
-                  name="telefono"
-                  value={form.telefono}
-                  onChange={handleChange}
-                  className="border border-[#ccc] rounded-md w-full p-2"
-                  required
-                />
-              </div>
-
-              {/* Tarjeta */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="flex-1">
-                  <label className="block text-[14px] mb-1">
-                    Número de tarjeta
-                  </label>
-                  <input
-                    name="tarjeta"
-                    value={form.tarjeta}
-                    onChange={handleTarjetaChange}
-                    placeholder="5401 04XX XXXX 5932"
-                    className="border border-[#ccc] rounded-md w-full p-2"
-                    required
-                  />
-                  <p className="text-[12px] text-gray-500 mt-1">
-                    Mínimo 14 y máximo 16 dígitos
-                  </p>
-                </div>
-                <div className="w-full sm:w-[100px]">
-                  <label className="block text-[14px] mb-1">CVV</label>
-                  <input
-                    name="cvv"
-                    value={form.cvv}
-                    onChange={handleCvvChange}
-                    placeholder="123"
-                    className="border border-[#ccc] rounded-md w-full p-2"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="w-full sm:w-[150px]">
-                  <label className="block text-[14px] mb-1">Vencimiento</label>
-                  <input
-                    name="vencimiento"
-                    value={form.vencimiento}
-                    onChange={handleVencimientoChange}
-                    placeholder="MM/AA"
-                    className="border border-[#ccc] rounded-md w-full p-2"
-                    required
-                  />
-                </div>
-                <div className="flex-1">
-                  <label className="block text-[14px] mb-1">Banco</label>
-                  <input
-                    name="banco"
-                    value={form.banco}
-                    onChange={handleChange}
-                    className="border border-[#ccc] rounded-md w-full p-2"
-                    required
-                  />
-                </div>
-              </div>
-
-              {metodo === "credito" && (
-                <div>
-                  <label className="block text-[14px] mb-1">Cuotas</label>
-                  <select
-                    name="cuotas"
-                    value={form.cuotas}
-                    onChange={handleChange}
-                    className="border border-[#ccc] rounded-md w-full p-2"
-                  >
-                    <option value="-">–</option>
-                    {Array.from({ length: 12 }).map((_, i) => (
-                      <option key={i} value={String(i + 1)}>
-                        {i + 1} cuota{i + 1 > 1 ? "s" : ""}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-
-        <button
-          type="submit"
-          className="w-full bg-[#0b57d0] text-white rounded-md mt-10 py-3 text-[15px] font-medium hover:bg-[#094dc1] transition-all duration-150 shadow-sm hover:shadow-md"
-        >
-          Generar comprobante y enviar
-        </button>
-
-        <p className="text-[12px] text-[#555] mt-6 leading-snug text-center">
-          Tenga en cuenta que la acreditación del reintegro al titular de la
-          tarjeta o cuenta dependerá del procesamiento por parte del banco
-          emisor.
-        </p>
-      </form>
-    </main>
-  );
-}
