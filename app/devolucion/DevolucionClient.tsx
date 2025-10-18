@@ -181,7 +181,10 @@ export default function DevolucionClient() {
             <label className="block text-[14px] font-medium mb-1">Medio de Pago</label>
             <select
               value={metodo}
-              onChange={(e) => setMetodo(e.target.value as any)}
+             onChange={(e) =>
+  setMetodo(e.target.value as "yape" | "credito" | "debito")
+}
+
               className="border border-[#ccc] rounded-md w-full p-2"
             >
               <option value="yape">Yape</option>
