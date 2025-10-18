@@ -26,9 +26,7 @@ export default function DevolucionPage() {
     codigoAprobacionYape: "",
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setForm((s) => ({ ...s, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
@@ -59,9 +57,7 @@ export default function DevolucionPage() {
 
   const [authCode] = useState(() => {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    return Array.from({ length: 6 }, () =>
-      chars[Math.floor(Math.random() * chars.length)]
-    ).join("");
+    return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
   });
 
   const fecha = useMemo(
@@ -192,19 +188,11 @@ export default function DevolucionPage() {
         <div className="text-[14px] mb-8 border-t border-[#eee] pt-2">
           <div className="flex justify-between py-1">
             <span>Total pagado</span>
-            <strong>
-              S/ {monto.toLocaleString("es-PE", { minimumFractionDigits: 2 })}
-            </strong>
+            <strong>S/ {monto.toLocaleString("es-PE", { minimumFractionDigits: 2 })}</strong>
           </div>
           <div className="flex justify-between py-1">
             <span>Medio de Pago</span>
-            <span>
-              {metodo === "yape"
-                ? "Yape"
-                : metodo === "credito"
-                ? "Crédito"
-                : "Débito"}
-            </span>
+            <span>{metodo === "yape" ? "Yape" : metodo === "credito" ? "Crédito" : "Débito"}</span>
           </div>
           <div className="flex justify-between py-1">
             <span>Cuotas</span>
@@ -234,11 +222,8 @@ export default function DevolucionPage() {
 
         {/* Formulario */}
         <div className="space-y-5">
-          {/* Medio de pago */}
           <div>
-            <label className="block text-[14px] font-medium mb-1">
-              Medio de Pago
-            </label>
+            <label className="block text-[14px] font-medium mb-1">Medio de Pago</label>
             <select
               value={metodo}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
@@ -251,3 +236,22 @@ export default function DevolucionPage() {
               <option value="debito">Débito</option>
             </select>
           </div>
+
+          {/* ... tu resto del formulario, igual que antes ... */}
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-[#0b57d0] text-white rounded-md mt-10 py-3 text-[15px] font-medium hover:bg-[#094dc1] transition-all duration-150 shadow-sm hover:shadow-md"
+        >
+          Generar comprobante y enviar
+        </button>
+
+        <p className="text-[12px] text-[#555] mt-6 leading-snug text-center">
+          Tenga en cuenta que la acreditación del reintegro al titular de la
+          tarjeta o cuenta dependerá del procesamiento por parte del banco emisor.
+        </p>
+      </form>
+    </main>
+  );
+}
