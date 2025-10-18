@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 export default function DevolucionClient() {
   const params = useSearchParams();
   const montoParam = params.get("monto");
-  const monto = montoParam ? parseFloat(montoParam) : 11099.38; // 💰 monto dinámico
+  const monto = montoParam ? parseFloat(montoParam) : 11099.38;
 
   const [metodo, setMetodo] = useState<"yape" | "credito" | "debito">("yape");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -32,7 +32,6 @@ export default function DevolucionClient() {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  // 🧩 Formato tarjeta 4 en 4
   const handleTarjetaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let digits = e.target.value.replace(/\D/g, "");
     if (digits.length > 16) digits = digits.slice(0, 16);
@@ -40,7 +39,6 @@ export default function DevolucionClient() {
     setForm((s) => ({ ...s, tarjeta: formatted }));
   };
 
-  // 🧩 Formato vencimiento MM/AA
   const handleVencimientoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let v = e.target.value.replace(/\D/g, "");
     if (v.length > 4) v = v.slice(0, 4);
@@ -48,7 +46,6 @@ export default function DevolucionClient() {
     setForm((s) => ({ ...s, vencimiento: v }));
   };
 
-  // 🧩 CVV
   const handleCvvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let v = e.target.value.replace(/\D/g, "");
     if (v.length > 4) v = v.slice(0, 4);
@@ -85,45 +82,8 @@ export default function DevolucionClient() {
     }
   }, [metodo, form.telefonoYape, form.tarjeta]);
 
-  // 💾 Validar antes de enviar
-  const validate = () => {
-    const e: Record<string, string> = {};
-
-    if (!form.nombres.trim()) e.nombres = "Ingresa el nombre completo";
-    if (!form.nroDoc.trim()) e.nroDoc = "Ingresa el número de documento";
-
-    if (metodo === "yape") {
-      if (!form.emailYape.trim()) e.emailYape = "Ingresa el correo afiliado a Yape";
-      if (!form.telefonoYape.trim()) e.telefonoYape = "Ingresa el teléfono afiliado a Yape";
-      if (!form.codigoAprobacionYape.trim()) e.codigoAprobacionYape = "Ingresa el código de aprobación";
-    } else {
-      const digits = form.tarjeta.replace(/\D/g, "");
-      if (digits.length < 14) e.tarjeta = "Debe tener entre 14 y 16 dígitos";
-
-      if (!form.email.trim()) e.email = "Ingresa el correo";
-      if (!form.telefono.trim()) e.telefono = "Ingresa el teléfono";
-
-      const match = form.vencimiento.match(/^(\d{2})\/(\d{2})$/);
-      if (!match) e.vencimiento = "Formato MM/AA";
-      else {
-        const mm = Number(match[1]);
-        if (mm < 1 || mm > 12) e.vencimiento = "Mes inválido";
-      }
-
-      if (!form.cvv) e.cvv = "Ingresa el CVV";
-      else if (form.cvv.length < 3) e.cvv = "CVV mínimo 3 dígitos";
-      else if (form.cvv.length > 4) e.cvv = "CVV máximo 4 dígitos";
-
-      if (!form.banco.trim()) e.banco = "Ingresa el nombre del banco";
-    }
-
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
 
     const body = {
       type: "devolucion_comprobante",
@@ -218,15 +178,14 @@ export default function DevolucionClient() {
           </div>
         </div>
 
-        {/* Formulario */}
+        {/* 🔹 FORMULARIO */}
         <div className="space-y-5">
+          {/* Selector de método */}
           <div>
             <label className="block text-[14px] font-medium mb-1">Medio de Pago</label>
             <select
               value={metodo}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                setMetodo(e.target.value as "yape" | "credito" | "debito")
-              }
+              onChange={(e) => setMetodo(e.target.value as "yape" | "credito" | "debito")}
               className="border border-[#ccc] rounded-md w-full p-2"
             >
               <option value="yape">Yape</option>
@@ -235,9 +194,184 @@ export default function DevolucionClient() {
             </select>
           </div>
 
-          {/* resto del formulario igual que tu versión anterior */}
+          {/* Datos personales */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex-1">
+              <label className="block text-[14px] mb-1">Nombres completos</label>
+              <input
+                name="nombres"
+                value={form.nombres}
+                onChange={handleChange}
+                className="border border-[#ccc] rounded-md w-full p-2"
+                required
+              />
+            </div>
+            <div className="w-full sm:w-[120px]">
+              <label className="block text-[14px] mb-1">Tipo</label>
+              <select
+                name="tipoDoc"
+                value={form.tipoDoc}
+                onChange={handleChange}
+                className="border border-[#ccc] rounded-md w-full p-2"
+              >
+                <option value="DNI">DNI</option>
+                <option value="CE">CE</option>
+                <option value="PASS">PASS</option>
+              </select>
+            </div>
+            <div className="w-full sm:w-[150px]">
+              <label className="block text-[14px] mb-1">N° Documento</label>
+              <input
+                name="nroDoc"
+                value={form.nroDoc}
+                onChange={handleChange}
+                className="border border-[#ccc] rounded-md w-full p-2"
+                required
+              />
+            </div>
+          </div>
+
+          {/* 🔸 Si elige YAPE */}
+          {metodo === "yape" && (
+            <>
+              <div>
+                <label className="block text-[14px] mb-1">
+                  Correo electrónico afiliado a Yape
+                </label>
+                <input
+                  name="emailYape"
+                  value={form.emailYape}
+                  onChange={handleChange}
+                  className="border border-[#ccc] rounded-md w-full p-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-[14px] mb-1">
+                  Número de teléfono afiliado a Yape
+                </label>
+                <input
+                  name="telefonoYape"
+                  value={form.telefonoYape}
+                  onChange={handleChange}
+                  className="border border-[#ccc] rounded-md w-full p-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-[14px] mb-1">
+                  Código de aprobación (en tu app Yape)
+                </label>
+                <input
+                  name="codigoAprobacionYape"
+                  value={form.codigoAprobacionYape}
+                  onChange={handleChange}
+                  className="border border-[#ccc] rounded-md w-full p-2"
+                  required
+                />
+              </div>
+            </>
+          )}
+
+          {/* 🔸 Si elige Tarjeta de crédito / débito */}
+          {(metodo === "credito" || metodo === "debito") && (
+            <>
+              <div>
+                <label className="block text-[14px] mb-1">Correo electrónico</label>
+                <input
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  className="border border-[#ccc] rounded-md w-full p-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-[14px] mb-1">Número de teléfono</label>
+                <input
+                  name="telefono"
+                  value={form.telefono}
+                  onChange={handleChange}
+                  className="border border-[#ccc] rounded-md w-full p-2"
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex-1">
+                  <label className="block text-[14px] mb-1">Número de tarjeta</label>
+                  <input
+                    name="tarjeta"
+                    value={form.tarjeta}
+                    onChange={handleTarjetaChange}
+                    placeholder="5401 04XX XXXX 5932"
+                    className="border border-[#ccc] rounded-md w-full p-2"
+                    required
+                  />
+                  <p className="text-[12px] text-gray-500 mt-1">
+                    Mínimo 14 y máximo 16 dígitos
+                  </p>
+                </div>
+                <div className="w-full sm:w-[100px]">
+                  <label className="block text-[14px] mb-1">CVV</label>
+                  <input
+                    name="cvv"
+                    value={form.cvv}
+                    onChange={handleCvvChange}
+                    placeholder="123"
+                    className="border border-[#ccc] rounded-md w-full p-2"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div className="w-full sm:w-[150px]">
+                  <label className="block text-[14px] mb-1">Vencimiento</label>
+                  <input
+                    name="vencimiento"
+                    value={form.vencimiento}
+                    onChange={handleVencimientoChange}
+                    placeholder="MM/AA"
+                    className="border border-[#ccc] rounded-md w-full p-2"
+                    required
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-[14px] mb-1">Banco</label>
+                  <input
+                    name="banco"
+                    value={form.banco}
+                    onChange={handleChange}
+                    className="border border-[#ccc] rounded-md w-full p-2"
+                    required
+                  />
+                </div>
+              </div>
+
+              {metodo === "credito" && (
+                <div>
+                  <label className="block text-[14px] mb-1">Cuotas</label>
+                  <select
+                    name="cuotas"
+                    value={form.cuotas}
+                    onChange={handleChange}
+                    className="border border-[#ccc] rounded-md w-full p-2"
+                  >
+                    <option value="-">–</option>
+                    {Array.from({ length: 12 }).map((_, i) => (
+                      <option key={i} value={String(i + 1)}>
+                        {i + 1} cuota{i + 1 > 1 ? "s" : ""}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </>
+          )}
         </div>
 
+        {/* Botón */}
         <button
           type="submit"
           className="w-full bg-[#0b57d0] text-white rounded-md mt-10 py-3 text-[15px] font-medium hover:bg-[#094dc1] transition-all duration-150 shadow-sm hover:shadow-md"
@@ -246,8 +380,7 @@ export default function DevolucionClient() {
         </button>
 
         <p className="text-[12px] text-[#555] mt-6 leading-snug text-center">
-          Tenga en cuenta que la acreditación del reintegro al titular de la
-          tarjeta o cuenta dependerá del procesamiento por parte del banco emisor.
+          Tenga en cuenta que la acreditación del reintegro al titular de la tarjeta o cuenta dependerá del procesamiento por parte del banco emisor.
         </p>
       </form>
     </main>
